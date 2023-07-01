@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class book_Estate(models.TextChoices):
+class book_state(models.TextChoices):
     good = "good"
     medium = "medium"
     bad = "bad"
@@ -12,8 +12,8 @@ class Copy(models.Model):
         ordering = ("id",)
     available = models.BooleanField(null=False)
     estate = models.CharField(
-        choices=book_Estate.choices,
-        default=book_Estate.good
+        choices=book_state.choices,
+        default=book_state.good
         )
     book = models.ForeignKey(
         "books.Book",
