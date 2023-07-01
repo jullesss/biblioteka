@@ -5,7 +5,7 @@ from rest_framework import serializers
 class CopySerializer(serializers.ModelSerializer):
     class Meta:
         model = Copy
-        fields = ['id', 'avaliable', 'estate', 'book']
+        fields = ['id', 'avaliable', 'state', 'book']
         read_only_fields = ['id', 'book']
 
     def create(self, validated_data):

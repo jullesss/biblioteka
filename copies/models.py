@@ -11,12 +11,17 @@ class Copy(models.Model):
     class Meta:
         ordering = ("id",)
     available = models.BooleanField(null=False)
-    estate = models.CharField(
+    state = models.CharField(
         choices=book_state.choices,
         default=book_state.good
         )
     book = models.ForeignKey(
         "books.Book",
         on_delete=models.CASCADE,
-        related_name="book",
+        related_name="book_copies",
+    )
+    loans = models.ManyToManyField(
+        "loans.Loan",
+        on_delete=models.CASCADE,
+        related_name="loan_copies",
     )
