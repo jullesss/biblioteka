@@ -1,5 +1,4 @@
 from rest_framework import generics
-from rest_framework import pagination
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import LoanSerializer
 from permissions.permissions import IsAdminOrOwner
