@@ -23,12 +23,11 @@ class ReturnModel:
         return self.data_futura.strftime("%d/%m/%Y")
     
 class Loan(models.Model):        
-
-    user_id = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE, related_name="user_loan"
+    user = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="user_loans"
     )
-    copy_id = models.ForeignKey(
-        "copies.Copy", on_delete=models.CASCADE, related_name="copy_loan"
+    copy = models.ForeignKey(
+        "copies.Copy", on_delete=models.CASCADE, related_name="copy_loans"
     )
     loan_date = models.DateTimeField(auto_now_add=True)
     return_date = ReturnModel.returning_date(self=ReturnModel)
