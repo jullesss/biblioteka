@@ -23,5 +23,5 @@ class Copy(models.Model):
     loans = models.ManyToManyField(
         "loans.Loan",
         related_name="loan_copies",
-        through="Loan"
+        through="loans.Loan"
     )
