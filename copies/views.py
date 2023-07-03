@@ -16,7 +16,7 @@ class CopyView(generics.ListCreateAPIView):
         return serializer.save(book_id=self.kwargs.get("pk"))
 
 
-class CopyDetails(generics.RetrieveUpdateDestroyAPIView):
+class CopyDetailsView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminOrOwner]
     queryset = Copy.objects.all()
