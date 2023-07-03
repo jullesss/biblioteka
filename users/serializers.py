@@ -12,8 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "password",
             "email",
-            "is_colaborator",
-            "is_student"
+            "is_admin",
             "blocked",
         ]
         extra_kwargs = {
@@ -27,15 +26,13 @@ class UserSerializer(serializers.ModelSerializer):
             },
             "id": {"read_only": True},
             "password": {"write_only": True},
-            "is_colaborator": {"required": True},
+            "is_admin": {"required": True},
         }
 
     def create(self, validated_data: dict) -> User:
-        is_colaborator = validated_data.get("is_colaborator", False)
-        validated_data["is_student"] = not is_colaborator
-        is_superuser = is_colaborator
+        is_admin = validated_data.get("is_admin", False)
 
-        if is_colaborator:
+        if is_admin:
             user = User.objects.create_superuser(**validated_data)
         else:
             user = User.objects.create_user(**validated_data)

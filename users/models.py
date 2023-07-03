@@ -3,7 +3,5 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=50)
-    is_colaborator = models.BooleanField(default=False)
-    is_student = models.BooleanField(null=True, blank=True, default=True)
+    is_admin = models.BooleanField(default=False)
     blocked = models.BooleanField(default=False)
