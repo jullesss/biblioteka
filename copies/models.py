@@ -22,7 +22,6 @@ class Copy(models.Model):
     )
     loans = models.ManyToManyField(
         "loans.Loan",
-        on_delete=models.CASCADE,
         related_name="loan_copies",
         through="Loan"
     )
