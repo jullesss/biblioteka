@@ -4,6 +4,7 @@ from rest_framework import generics, exceptions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Favorite
 from permissions.permissions import IsOwner, IsAdminUser, IsAdminOrOwner
+from rest_framework.permissions import IsAuthenticated
 
 
 class CreateFavoriteView(generics.CreateAPIView):
@@ -50,7 +51,7 @@ class GetAllFavoriteUserView(generics.ListAPIView):
 
 class FavoriteRemoveView(generics.DestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminOrOwner]
+    permission_classes = [IsAuthenticated]
     serializer_class = FavoriteSerializer
     lookup_field = "book_id"
 
