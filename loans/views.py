@@ -4,11 +4,8 @@ from .serializers import LoanSerializer
 from permissions.permissions import IsAdminUser
 from .models import Loan
 from books.models import Book
-from users.models import User
-from copies.models import Copy
 from django.shortcuts import get_object_or_404
-from rest_framework.response import Response
-from rest_framework import status
+
 from datetime import datetime
 
 class LoanView(generics.ListCreateAPIView):
@@ -23,7 +20,7 @@ class LoanView(generics.ListCreateAPIView):
 
         serializer.save(book=book)
 
-""" class LoanDetailsView(generics.CreateAPIView):
+class LoanDetailsView(generics.CreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
     serializer_class = LoanSerializer
@@ -32,7 +29,8 @@ class LoanView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
        
         today = int(datetime.now().day)
-        return_date = int(loan.return_date.day)
+        print(today)
+        """ return_date = int(loan.return_date.day)
         if today > return_date:
             user.blocked
             return Response(message="User is now blocked",status=status.HTTP_200_OK)
