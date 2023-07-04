@@ -50,7 +50,7 @@ class GetAllFavoriteUserView(generics.ListAPIView):
 
 class FavoriteRemoveView(generics.DestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsOwner]
+    permission_classes = [IsAdminOrOwner]
     serializer_class = FavoriteSerializer
     lookup_field = "book_id"
 
