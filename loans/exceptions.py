@@ -6,3 +6,10 @@ class BlockedError(APIException):
 
     def __init__(self, detail=None, code=None):
         super().__init__(detail, code)
+
+class NoCopyAvailable(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = "It is not possible to loan this book, no copies available"
+
+    def __init__(self, detail=None, code=None):
+        super().__init__(detail, code)
