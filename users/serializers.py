@@ -8,6 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id",
+            "username",
             "first_name",
             "last_name",
             "password",
@@ -38,6 +39,8 @@ class UserSerializer(serializers.ModelSerializer):
             user = User.objects.create_user(**validated_data)
 
         return user
+
+        
 
     def update(self, instance: User, validated_data: dict) -> User:
         for key, value in validated_data.items():

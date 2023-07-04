@@ -17,7 +17,7 @@ class IsAdminOrOwner(permissions.BasePermission):
 
 
 class IsAdminUser(permissions.BasePermission):
-    def has_permission(self, request: Request, view: View):
+    def has_object_permission(self, request: Request, view: View):
         return request.user.is_admin
 
 
