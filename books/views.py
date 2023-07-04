@@ -1,9 +1,18 @@
 from rest_framework import generics
-"""
-Deve ser possível também usuários não autenticados acessarem a plataforma para visualizar informações sobre os livros, como disponibilidade, título, etc. -> permission
-"""
+from .models import Book
+from .serializers import BookSerializer
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from permissions.permissions import IsAdminOrReadOnly
 
-class AlbumView(generics.ListCreateAPIView):
-    ...
+
+class BookView(generics.ListCreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminOrReadOnly]
+
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user= self.request.user)
 
 

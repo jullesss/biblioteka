@@ -24,4 +24,11 @@ class BookSerializer(serializers.ModelSerializer):
         return book.book_copies.count()
 
     def create(self, validated_data) -> Book:
-        return Book.objects.create(**validated_data)
+        user = validated_data.pop("user")
+        instance_book = Book.objects.create(**validated_data)
+
+        instance_book.users.add(user)
+        instance_book.save()
+        
+        return instance_book
+
