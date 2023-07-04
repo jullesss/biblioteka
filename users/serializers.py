@@ -10,29 +10,26 @@ class UserSerializer(serializers.ModelSerializer):
             "id",
             "first_name",
             "last_name",
+            "username",
             "password",
             "email",
             "is_admin",
             "blocked",
         ]
         extra_kwargs = {
-            "email": {
-                "validators": [
-                    UniqueValidator(
-                        queryset=User.objects.all(),
-                        message="This email is already been used",
-                    )
-                ]
-            },
             "id": {"read_only": True},
             "password": {"write_only": True},
             "is_admin": {"required": True},
         }
 
     def create(self, validated_data: dict) -> User:
+        is_superuser = validated_data.get("is_superuser", False)
         is_admin = validated_data.get("is_admin", False)
 
-        if is_admin:
+        if is_superuser:
+            validated_data["is_admin"] = True
+            user = User.objects.create_superuser(**validated_data)
+        elif is_admin:
             user = User.objects.create_superuser(**validated_data)
         else:
             user = User.objects.create_user(**validated_data)
