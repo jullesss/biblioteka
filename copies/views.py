@@ -12,12 +12,22 @@ class CopyView(generics.ListCreateAPIView):
     queryset = Copy.objects.all()
     serializer_class = CopySerializer
 
+    def get_queryset(self):
+        return Copy.objects.filter(book_id=self.kwargs.get("book_id"))
+
     def perform_create(self, serializer):
-        return serializer.save(book_id=self.kwargs.get("pk"))
+        return serializer.save(book_id=self.kwargs.get("book_id"))
 
 
 class CopyDetailsView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminOrOwner]
+    serializer_class = CopySerializer
     queryset = Copy.objects.all()
-    lookup_url_kwarg = "book_id"
+    lookup_url_kwarg = "copy_id"
+    second_lookup_url_kwarg = "book_id"
+
+    def get_queryset(self):
+        return Copy.objects.filter(**{
+            "book_id": self.kwargs.get("book_id"),
+            "id": self.kwargs.get("copy_id")})
