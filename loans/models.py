@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime, timedelta
+from django.utils import timezone
 import holidays
 
 holidays_list = holidays.Brazil()
@@ -30,7 +31,8 @@ class Loan(models.Model):
         "copies.Copy", on_delete=models.CASCADE, related_name="copy_loans"
     )
     loan_date = models.DateTimeField(auto_now_add=True)
-    return_date = ReturnModel.returning_date(self=ReturnModel)
+    #return_date = ReturnModel.returning_date(self=ReturnModel)
+    return_date = models.DateTimeField(default=timezone.now()+timedelta(days=3))
 
 
 
