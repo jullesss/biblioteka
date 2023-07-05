@@ -2,15 +2,18 @@ from rest_framework import serializers
 from .models import Loan
 from users.models import User
 from copies.models import Copy
-from .exceptions import BlockedError, NoCopyAvailable
+from .exceptions import BlockedError, NoCopyAvailable, NoLoan
+from django.shortcuts import get_object_or_404
+from datetime import datetime
+from rest_framework.views import Response, status
 
 
 class LoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = ['id', 'copy', 'loan_date', 'return_date']
-        read_only_fields = ['return_date', 'copy']
+        fields = ['id', 'copy', 'loan_date', 'return_date', 'user']
+        read_only_fields = ['return_date', 'copy', 'user']
 
 
     def create(self, validated_data: dict) -> Loan:
@@ -33,5 +36,62 @@ class LoanSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+    
+
+    def update(self, instance, validated_data: dict):
+        print('entra no seri')
+
+        user_loan = get_object_or_404(Loan, copy = validated_data.get('copy'), user = validated_data.get('user'))
+
+        if not user_loan:
+            raise NoLoan()
+        
+        user_loan.return_date = datetime.now()
+        today = datetime.now().day
+    
+        due_date = user_loan.due_date.day
+
+        if today > due_date:
+            found_user = get_object_or_404(User, username=validated_data.get('username'))
+            found_user.blocked = True
+            found_user.save()
+
+        copy_to_relate = get_object_or_404(Copy, id=validated_data.get('found_copy'))
+        copy_to_relate.available = True
+        copy_to_relate.save()
+        
+        instance.save()
+
+        return ...
+
+        
+        
+            
+            
+
+        
+            
+
+        
 
 
+
+"""         username = validated_data.pop('username')
+        user = User.objects.filter(username__iexact=username).first() """
+
+
+       # user_loan = Loan.objects.filter(**{"user_id":user.id, "copy_id":validated_data.get('copy.id')}).first()
+
+       
+      #  copy_related = Copy.objects.filter(user=user, book=validated_data.get('book')).first()
+
+"""         user_loan = Loan.objects.filter(user=user, copy=validated_data.get('copy')).first()
+
+        if not user_loan:
+            raise NoLoan()
+
+        print(user_loan)
+
+    
+
+        return super().update(instance, validated_data) """
