@@ -39,7 +39,6 @@ class LoanSerializer(serializers.ModelSerializer):
     
 
     def update(self, instance, validated_data: dict):
-        print('entra no seri')
 
         user_loan = get_object_or_404(Loan, copy = validated_data.get('copy'), user = validated_data.get('user'))
 
@@ -66,32 +65,4 @@ class LoanSerializer(serializers.ModelSerializer):
 
         
         
-            
-            
-
-        
-            
-
-        
-
-
-
-"""         username = validated_data.pop('username')
-        user = User.objects.filter(username__iexact=username).first() """
-
-
-       # user_loan = Loan.objects.filter(**{"user_id":user.id, "copy_id":validated_data.get('copy.id')}).first()
-
-       
-      #  copy_related = Copy.objects.filter(user=user, book=validated_data.get('book')).first()
-
-"""         user_loan = Loan.objects.filter(user=user, copy=validated_data.get('copy')).first()
-
-        if not user_loan:
-            raise NoLoan()
-
-        print(user_loan)
-
     
-
-        return super().update(instance, validated_data) """
