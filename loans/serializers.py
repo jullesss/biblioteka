@@ -58,10 +58,15 @@ class LoanSerializer(serializers.ModelSerializer):
         copy_to_relate = get_object_or_404(Copy, id=validated_data.get('found_copy'))
         copy_to_relate.available = True
         copy_to_relate.save()
-        
-        instance.save()
 
-        return ...
+"""         
+        Falta: conferir se as alterações nos atributos das models acima estão sendo feitas mesmo 
+        + criar a instancia para salvar 
+        + retornar mensagem de livro devolvido
+        
+        instance.create()
+        instance.save()
+        return  """
 
         
         
