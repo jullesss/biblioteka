@@ -40,7 +40,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    "rest_framework",  "businessdays"
+    "rest_framework"
 ]
 
 MY_APPS = [
