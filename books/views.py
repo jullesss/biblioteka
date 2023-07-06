@@ -13,6 +13,14 @@ class BookView(generics.ListCreateAPIView):
     serializer_class = BookSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user= self.request.user)
+        serializer.save(user=self.request.user)
 
+
+class BookDetailView(generics.RetrieveDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminOrReadOnly]
+
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    lookup_url_kwarg = "book_id"
 

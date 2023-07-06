@@ -10,7 +10,7 @@ class book_state(models.TextChoices):
 class Copy(models.Model):
     class Meta:
         ordering = ("id",)
-    available = models.BooleanField(null=False)
+    available = models.BooleanField(default=True)
     state = models.CharField(
         max_length=20,
         choices=book_state.choices,

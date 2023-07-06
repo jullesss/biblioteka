@@ -12,3 +12,5 @@ class Book(models.Model):
 
     users = models.ManyToManyField("users.User", related_name="books")
 
+
+
