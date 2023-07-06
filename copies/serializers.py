@@ -13,3 +13,4 @@ class CopySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Copy.objects.create(**validated_data)
+    
