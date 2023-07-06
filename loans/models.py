@@ -1,27 +1,8 @@
 from django.db import models
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 import holidays
 
-holidays_list = holidays.Brazil()
-
-def get_next_business_day(date, holidays_list):
-    next_day = date + timedelta(days=1)
-    while not is_business_day(next_day, holidays_list):
-        next_day += timedelta(days=1)
-    return next_day
-
-def is_business_day(date, holidays_list):
-    return date.weekday() < 5 and date not in holidays_list
-
-current_date = datetime.now()
-return_date = get_next_business_day(current_date, holidays_list)
-
-class ReturnModel:
-
-    def returning_date(self):
-        self.data_futura = get_next_business_day(datetime.now(), holidays_list)
-        return self.data_futura.strftime("%d/%m/%Y")
-    
 class Loan(models.Model):        
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="user_loans"
@@ -30,7 +11,18 @@ class Loan(models.Model):
         "copies.Copy", on_delete=models.CASCADE, related_name="copy_loans"
     )
     loan_date = models.DateTimeField(auto_now_add=True)
-    return_date = ReturnModel.returning_date(self=ReturnModel)
+    due_date = models.DateTimeField(null=True)
+    return_date = models.DateTimeField(null=True)
 
-
+    def save(self, *args, **kwargs):
+        if not self.id:  # Verifica se é um novo empréstimo
+            holiday_calendar = holidays.BR()
+            current_date = timezone.now().date()
+            days_count = 0
+            while days_count < 3:
+                current_date += timedelta(days=1)
+                if current_date.weekday() < 5 and current_date not in holiday_calendar:
+                    days_count += 1
+            self.due_date = timezone.datetime.combine(current_date, timezone.now().time())
+        super().save(*args, **kwargs)
 
