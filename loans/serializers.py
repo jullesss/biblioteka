@@ -1,24 +1,45 @@
 from rest_framework import serializers
 from .models import Loan
-from users.serializers import UserSerializer
 from users.models import User
-from books.serializers import BookSerializer
+from users.serializers import UserSerializer
+from books.models import Book
 from copies.models import Copy
 from .exceptions import BlockedError, NoCopyAvailable, NoLoan
 from django.shortcuts import get_object_or_404
 from datetime import datetime
 
+class BookCopySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Book
+        fields = [
+            "id",
+            "title",
+            "author"
+        ]
+
 class CopyBookSerializer(serializers.ModelSerializer):
-    book = BookSerializer(read_only=True)
+    book = BookCopySerializer(read_only=True)
 
     class Meta:
         model = Copy
         fields = ['id', 'book']
         read_only_fields = ['book']
 
+class UserLoanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+        ]
+
 class LoanSerializer(serializers.ModelSerializer):
     username = serializers.CharField(write_only=True)
-    user = UserSerializer(read_only=True)
+    user = UserLoanSerializer(read_only=True)
     copy = CopyBookSerializer(read_only=True)
 
     class Meta:
