@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Loan
 from users.models import User
-from users.serializers import UserSerializer
 from books.models import Book
 from copies.models import Copy
 from .exceptions import BlockedError, NoCopyAvailable, NoLoan
