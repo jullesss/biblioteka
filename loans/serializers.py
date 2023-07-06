@@ -1,19 +1,30 @@
 from rest_framework import serializers
 from .models import Loan
+from users.serializers import UserSerializer
 from users.models import User
+from books.serializers import BookSerializer
 from copies.models import Copy
 from .exceptions import BlockedError, NoCopyAvailable, NoLoan
 from django.shortcuts import get_object_or_404
 from datetime import datetime
-from rest_framework.views import Response, status
 
+class CopyBookSerializer(serializers.ModelSerializer):
+    book = BookSerializer(read_only=True)
+
+    class Meta:
+        model = Copy
+        fields = ['id', 'book']
+        read_only_fields = ['book']
 
 class LoanSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(write_only=True)
+    user = UserSerializer(read_only=True)
+    copy = CopyBookSerializer(read_only=True)
 
     class Meta:
         model = Loan
-        fields = ['id', 'copy', 'loan_date', 'return_date', 'user']
-        read_only_fields = ['return_date', 'copy', 'user']
+        fields = ['id', 'copy', 'loan_date', 'return_date', 'user', 'due_date', 'username']
+        read_only_fields = ['return_date', 'copy', 'user', 'due_date']
 
 
     def create(self, validated_data: dict) -> Loan:
@@ -38,36 +49,28 @@ class LoanSerializer(serializers.ModelSerializer):
         return instance
     
 
-    def update(self, instance, validated_data: dict):
+    def update(self, instance, validated_data: dict): 
+        username = validated_data.pop('username')
+        user =  get_object_or_404(User, username=username)
+        copy = validated_data.get('copy')
 
-        user_loan = get_object_or_404(Loan, copy = validated_data.get('copy'), user = validated_data.get('user'))
+        instance_loan = Loan.objects.filter(copy = copy, user = user, return_date=None).first()
 
-        if not user_loan:
+        if not instance_loan:
             raise NoLoan()
         
-        user_loan.return_date = datetime.now()
+        instance_loan.return_date = datetime.now()
+        instance_loan.save()
+
         today = datetime.now().day
-    
-        due_date = user_loan.due_date.day
+        due_date = instance_loan.due_date.day
 
         if today > due_date:
-            found_user = get_object_or_404(User, username=validated_data.get('username'))
-            found_user.blocked = True
-            found_user.save()
+            user.blocked = True
+            user.save()
 
-        copy_to_relate = get_object_or_404(Copy, id=validated_data.get('found_copy'))
-        copy_to_relate.available = True
-        copy_to_relate.save()
+        copy.available = True
+        copy.save()
 
-"""         
-        Falta: conferir se as alterações nos atributos das models acima estão sendo feitas mesmo 
-        + criar a instancia para salvar 
-        + retornar mensagem de livro devolvido
-        
-        instance.create()
-        instance.save()
-        return  """
-
-        
-        
+        return instance_loan
     

@@ -10,7 +10,6 @@ class Loan(models.Model):
         "copies.Copy", on_delete=models.CASCADE, related_name="copy_loans"
     )
     loan_date = models.DateTimeField(auto_now_add=True)
-    #return_date = models.DateTimeField(default=timezone.now()+timedelta(days=3))
     due_date = models.DateTimeField(default=timezone.now()+timedelta(days=3))
     return_date = models.DateTimeField(null=True)
 
