@@ -1,19 +1,26 @@
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import LoanSerializer
-from permissions.permissions import IsAdminOrOwner, IsAdminUser, IsAdminOrReadOnly
+from permissions.permissions import IsAdminUser, IsAdminOrReadOnly
 from .models import Loan
-from users.models import User
 from copies.models import Copy
 from books.models import Book
 from django.shortcuts import get_object_or_404
 
-class LoanView(generics.ListCreateAPIView):
+class ListUserLoansView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+    serializer_class = LoanSerializer
+
+    def get_queryset(self):
+        found_user = self.kwargs.get("pk")
+        return Loan.objects.filter(user_id=found_user)
+
+class CreateLoanView(generics.CreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
     serializer_class = LoanSerializer
     queryset = Loan.objects.all()
-    #ver a bandkamp pra arrumar o list
 
     def perform_create(self, serializer):
         found_book = self.kwargs.get("pk")
@@ -22,7 +29,7 @@ class LoanView(generics.ListCreateAPIView):
         serializer.save(book=book, username=self.request.data.get('username'))
 
 
-class ReturnView(generics.UpdateAPIView):
+class ReturnBookView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = LoanSerializer
