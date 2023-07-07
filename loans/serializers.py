@@ -7,6 +7,8 @@ from favorites.models import Favorite
 from .exceptions import BlockedError, NoCopyAvailable, NoLoan
 from django.shortcuts import get_object_or_404
 from datetime import datetime
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class BookCopySerializer(serializers.ModelSerializer):
@@ -57,12 +59,13 @@ class LoanSerializer(serializers.ModelSerializer):
     def create(self, validated_data: dict) -> Loan:
         username = validated_data.pop("username")
         user = User.objects.filter(username__iexact=username).first()
+        the_book = validated_data.get("book")
 
         if user.blocked:
             raise BlockedError()
 
         copy_to_relate = Copy.objects.filter(
-            available=True, book=validated_data.get("book")
+            available=True, book=the_book
         ).first()
 
         if not copy_to_relate:
@@ -71,25 +74,28 @@ class LoanSerializer(serializers.ModelSerializer):
         copy_to_relate.available = False
         copy_to_relate.save()
 
-
         instance = Loan.objects.create(copy=copy_to_relate, user=user)
-
         instance.save()
 
-        favorites = Favorite.objects.filter(book=validated_data.get("book")).first()
+        favorites = Favorite.objects.filter(book=the_book).first()
         all_favs = favorites.book.book_copies.all().filter(available=True).count()
-        print(all_favs)
 
-        user_favorited = Favorite.objects.values('user')
+        user_favorited = Favorite.objects.values("user")
         print(user_favorited)
+        mail_list = []
         for user in user_favorited:
-            the_user = get_object_or_404(User, id=user.get('user'))
-            print(the_user)
-           
+            the_user = get_object_or_404(User, id=user.get("user"))
+            mail_list.append(the_user.email)
+
+        send_mail(
+            subject="BiblioteKa - Aviso de cópia",
+            message=f'O livro {the_book.title} que você favoritou está com {all_favs} exemplares disponíveis no momento. Aproveite para pegar emprestado!',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[mail_list],
+            fail_silently=False,
+        )
 
         return instance
-        
-
 
     def update(self, instance, validated_data: dict):
         username = validated_data.pop("username")

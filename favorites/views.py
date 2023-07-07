@@ -17,15 +17,14 @@ class CreateFavoriteView(generics.CreateAPIView):
         return Favorite.objects.filter(book_id=self.kwargs.get("book_id"))
 
     def perform_create(self, serializer):
-        user = self.request.user
-        print(user)
+        user_id = self.request.user.id
         book_id = self.kwargs.get("book_id")
-        exist = Favorite.objects.filter(user=user, book_id=book_id).first()
+        exist = Favorite.objects.filter(user_id=user_id, book_id=book_id).first()
         if exist:
             raise exceptions.ValidationError("Book is already favorited.")
-        return serializer.save(
-            book_id=book_id,
-            user=user
+        return serializer.save(**{
+            "book_id": book_id,
+            "user_id": user_id}
             )
 
 
