@@ -11,7 +11,6 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             "first_name",
             "last_name",
-            "username",
             "password",
             "email",
             "is_admin",
@@ -19,6 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             "id": {"read_only": True},
+            "first_name": {"required": True},
+            "last_name": {"required": True},
             "password": {"write_only": True},
             "is_admin": {"required": True},
         }
@@ -36,8 +37,6 @@ class UserSerializer(serializers.ModelSerializer):
             user = User.objects.create_user(**validated_data)
 
         return user
-
-        
 
     def update(self, instance: User, validated_data: dict) -> User:
         for key, value in validated_data.items():
