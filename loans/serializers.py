@@ -46,7 +46,6 @@ class LoanSerializer(serializers.ModelSerializer):
         fields = ['id', 'copy', 'loan_date', 'return_date', 'user', 'due_date', 'username']
         read_only_fields = ['return_date', 'copy', 'user', 'due_date']
 
-
     def create(self, validated_data: dict) -> Loan:
         username = validated_data.pop('username')
         user = User.objects.filter(username__iexact=username).first()
