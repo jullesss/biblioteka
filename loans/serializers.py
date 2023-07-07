@@ -89,7 +89,7 @@ class LoanSerializer(serializers.ModelSerializer):
 
         send_mail(
             subject="BiblioteKa - Aviso de cópia",
-            message=f'O livro {the_book.title} que você favoritou está com {all_favs} exemplares disponíveis no momento. Aproveite para pegar emprestado!',
+            message=f'O livro {the_book.title} que você favoritou está com {all_favs} exemplares disponíveis no momento.',
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[mail_list],
             fail_silently=False,
