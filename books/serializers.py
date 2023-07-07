@@ -31,8 +31,8 @@ class BookSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data) -> Book:
         copies_quantity = validated_data.pop('copies_quantity')
-
         user = validated_data.pop("user")
+        
         instance_book = Book.objects.create(**validated_data)
 
         if copies_quantity:
