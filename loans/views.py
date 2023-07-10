@@ -1,21 +1,24 @@
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import LoanSerializer
-from permissions.permissions import IsAdminUser, IsAdminOrReadOnly
+from permissions.permissions import IsAdminUser, IsAdminOrReadOnly, IsAdminOrOwner
 from .models import Loan
 from copies.models import Copy
 from books.models import Book
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied
 
 class ListUserLoansView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrOwner]
     serializer_class = LoanSerializer
 
     def get_queryset(self):
         found_user = self.kwargs.get("pk")
-        return Loan.objects.filter(user_id=found_user)
-
+        if self.request.user.id == found_user or self.request.user.is_admin:
+            return Loan.objects.filter(user_id=found_user)
+        raise PermissionDenied
+    
 class CreateLoanView(generics.CreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]

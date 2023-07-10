@@ -9,4 +9,3 @@ urlpatterns = [
     path("fav/", fav_views.GetAllFavoriteView.as_view()),
 ]
 
-
