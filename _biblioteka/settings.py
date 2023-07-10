@@ -183,10 +183,6 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
 }
 
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7)}
-
-
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Biblioteka API',
     'DESCRIPTION': 'Este projeto tem como objetivo desenvolver uma aplicação para a gestão de uma biblioteca, proporcionando funcionalidades tanto para estudantes quanto para colaboradores da mesma.',
@@ -194,4 +190,3 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
 }
-
