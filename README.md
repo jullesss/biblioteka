@@ -10,8 +10,8 @@
 
 ### Usuários
 - A aplicação permite o cadastro de dois tipos de usuários: Estudante e Colaborador da biblioteca.
-- Estudantes têm acesso a funcionalidades como realizar empréstimos, verificar o próprio histórico de livros emprestados, obter informações sobre livros e seguir livros para receber notificações por e-mail sobre disponibilidade e status.
-- Colaboradores têm acesso a funcionalidades adicionais como cadastrar novos livros, verificar o histórico de empréstimos de cada estudante e verificar o status de um estudante (se está bloqueado ou não).
+- Estudantes têm acesso a funcionalidades como verificar o próprio histórico de livros emprestados, obter informações sobre livros (como título, autor, número de páginas, ano de publicação, imagem e descrição do livro ) e seguir livros para receber notificações por e-mail.  É possível buscar uma lista completa de livros cadastrados, bem como buscar por um livro específico através do ID.
+- Colaboradores têm acesso a funcionalidades adicionais como realizar empréstimos, cadastrar novos livros, verificar o histórico de empréstimos de cada estudante e verificar o status de um estudante (se está bloqueado ou não).
 
 ### Acesso Público
 - Usuários não autenticados também podem acessar a plataforma para visualizar informações sobre os livros, como disponibilidade, título, etc.
@@ -23,7 +23,6 @@
 ### Devolução de Livros
 - Todos os livros emprestados devem ser devolvidos até a data estipulada.
 - Se um estudante não devolver o livro até o prazo determinado, ele será bloqueado e não poderá solicitar novos empréstimos.
-- Após completar as devoluções pendentes, o bloqueio permanecerá ativo por alguns dias.
 
 
 ## Instalação e Execução
