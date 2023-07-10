@@ -15,7 +15,7 @@ class Loan(models.Model):
     return_date = models.DateTimeField(null=True)
 
     def save(self, *args, **kwargs):
-        if not self.id:  # Verifica se é um novo empréstimo
+        if not self.id:
             holiday_calendar = holidays.BR()
             current_date = timezone.now().date()
             days_count = 0
