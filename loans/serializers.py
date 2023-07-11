@@ -78,23 +78,24 @@ class LoanSerializer(serializers.ModelSerializer):
         instance.save()
 
         favorites = Favorite.objects.filter(book=the_book).first()
-        all_favs = favorites.book.book_copies.all().filter(available=True).count()
+        if favorites:
+            all_favs = favorites.book.book_copies.all().filter(available=True).count()
 
-        user_favorited = Favorite.objects.values("user")
-        mail_list = []
-        for user in user_favorited:
-            the_user = get_object_or_404(User, id=user.get("user"))
-            mail_list.append(the_user.email)
+            user_favorited = Favorite.objects.values("user")
+            mail_list = []
+            for user in user_favorited:
+                the_user = get_object_or_404(User, id=user.get("user"))
+                mail_list.append(the_user.email)
 
-        oficial_mail_list = list(set(mail_list))
+            oficial_mail_list = list(set(mail_list))
 
-        send_mail(
-            subject="BiblioteKa - Aviso de cópia",
-            message=f'O livro "{the_book.title}" que você favoritou está com {all_favs} exemplares disponíveis no momento.',
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=oficial_mail_list,
-            fail_silently=False,
-        )
+            send_mail(
+                subject="BiblioteKa - Aviso de cópia",
+                message=f'O livro "{the_book.title}" que você favoritou está com {all_favs} exemplares disponíveis no momento.',
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=oficial_mail_list,
+                fail_silently=False,
+            )
 
         return instance
 

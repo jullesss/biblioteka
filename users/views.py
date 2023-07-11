@@ -4,7 +4,6 @@ from users.serializers import UserSerializer
 from rest_framework import generics
 from permissions.permissions import IsAdminUser, IsOwner, IsAdminOrOwner
 
-
 class UserView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
