@@ -16,6 +16,11 @@ class IsAdminOrOwner(permissions.BasePermission):
         return request.user.is_admin or request.user == obj
 
 
+class IsSuperUser(permissions.BasePermission):
+    def has_permission(self, request: Request, view: View):
+        return request.user.is_superuser
+
+
 class IsAdminUser(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View):
         return request.user.is_admin
@@ -24,6 +29,3 @@ class IsAdminUser(permissions.BasePermission):
 class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request: Request, view: View, obj):
         return request.user == obj
-    
-
-
