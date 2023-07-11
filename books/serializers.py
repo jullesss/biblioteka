@@ -20,19 +20,16 @@ class BookSerializer(serializers.ModelSerializer):
             "img_url",
             "description",
             "copies_number",
-            "copies_quantity"
+            "copies_quantity",
         ]
-        extra_kwargs = {
-            "copies_quantity": {"write_only": True}
-        }
 
     def get_copies_number(self, book):
         return book.book_copies.count()
 
     def create(self, validated_data) -> Book:
-        copies_quantity = validated_data.pop('copies_quantity')
+        copies_quantity = validated_data.pop("copies_quantity", None)
         user = validated_data.pop("user")
-        
+
         instance_book = Book.objects.create(**validated_data)
 
         if copies_quantity:
@@ -41,6 +38,5 @@ class BookSerializer(serializers.ModelSerializer):
 
         instance_book.users.add(user)
         instance_book.save()
-        
-        return instance_book
 
+        return instance_book
