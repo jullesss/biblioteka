@@ -11,6 +11,3 @@ class Book(models.Model):
     description = models.TextField(null=True)
 
     users = models.ManyToManyField("users.User", related_name="books")
-
-
-
