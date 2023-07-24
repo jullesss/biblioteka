@@ -1,6 +1,6 @@
-# biblioteka-g13
+# Biblioteka API
 
-# Bem-vinde ao projeto BiblioteKa!
+# Bem-vinde ao projeto Biblioteka!
 
 ## Introdução
 
