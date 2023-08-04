@@ -1,6 +1,4 @@
-# Biblioteka API
-
-# Bem-vinde ao projeto Biblioteka!
+# Bem-vinde ao projeto Biblioteka API!
 
 ## Introdução
 
